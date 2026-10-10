@@ -38,10 +38,18 @@ else:
 config_path = AppDirs("cfclient", "Bitcraze").user_config_dir
 
 if not hasattr(sys, 'frozen'):
-    import pkg_resources
     try:
-        VERSION = pkg_resources.require("cfclient")[0].version
-    except pkg_resources.DistributionNotFound:
+        from importlib.metadata import PackageNotFoundError, version
+        VERSION = version("cfclient")
+    except ImportError:
+        # Python 3.7 does not provide importlib.metadata. Keep the legacy
+        # fallback for the versions still advertised by this package.
+        import pkg_resources
+        try:
+            VERSION = pkg_resources.require("cfclient")[0].version
+        except pkg_resources.DistributionNotFound:
+            VERSION = "dev"
+    except PackageNotFoundError:
         VERSION = "dev"
 else:
     with open(os.path.join(module_path, "version.json")) as f:

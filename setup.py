@@ -91,7 +91,9 @@ setup(
     },
 
     install_requires=['cflib @ git+https://github.com/leeebo/crazyflie-lib-python.git',
-                      'setuptools',
+                      # cflib currently imports pkg_resources, which was
+                      # removed from setuptools 81.
+                      'setuptools<81',
                       'appdirs~=1.4.0',
                       'pyzmq~=25.0',
                       'pyqtgraph~=0.13',

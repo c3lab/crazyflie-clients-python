@@ -356,6 +356,13 @@ class FlightTab(TabToolbox, flight_tab_class):
         self.inputYawLabel.setText(yaw)
 
     def _update_supervisor_and_arming(self, connected):
+        if connected and self._helper.cf.platform.get_protocol_version() < 7:
+            self.armButton.setEnabled(False)
+            self.armButton.setText("Not supported")
+            self.armButton.setToolTip("This firmware does not expose explicit arm/disarm commands.")
+            self.armButton.setStyleSheet("")
+            return
+        self.armButton.setToolTip("")
         if not connected:
             self.armButton.setStyleSheet("")
             self.armButton.setText("Arm")
